@@ -1,10 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { useActionState } from 'react';
+import { useState } from 'react';
 
-import { submitProposal } from '@/app/proposer/actions';
-import { INITIAL_SUBMIT_STATE, type SubmitState } from '@/lib/submit';
+import {
+  INITIAL_SUBMIT_STATE,
+  validateProposal,
+  type SubmitState,
+} from '@/lib/submit';
 
 /**
  * Le formulaire de proposition — un formulaire par soirée.
@@ -15,10 +18,12 @@ import { INITIAL_SUBMIT_STATE, type SubmitState } from '@/lib/submit';
  * oublient le tarif, la billetterie et l'affiche.
  */
 export default function SubmitForm() {
-  const [state, action, pending] = useActionState<SubmitState, FormData>(
-    submitProposal,
-    INITIAL_SUBMIT_STATE,
-  );
+  const [state, setState] = useState<SubmitState>(INITIAL_SUBMIT_STATE);
+
+  function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setState(validateProposal(new FormData(event.currentTarget)));
+  }
 
   if (state.status === 'sent') {
     return (
@@ -31,6 +36,13 @@ export default function SubmitForm() {
             soirée ne rentre pas dans la ligne de l’agenda.
           </p>
           <p>S’il manque une info, on vous écrit avant la clôture.</p>
+          {/* Le site est une démonstration : rien n'est parti nulle part, et
+              il serait malhonnête de laisser croire le contraire à quelqu'un
+              qui aurait rempli le formulaire pour de bon. */}
+          <p className="warn">
+            Ceci est une démonstration : votre saisie n’a pas été envoyée et
+            n’a été enregistrée nulle part.
+          </p>
           <p style={{ marginTop: 18 }}>
             <Link href="/" className="btn">
               Retour à la semaine
@@ -49,7 +61,7 @@ export default function SubmitForm() {
     ) : null;
 
   return (
-    <form className="form" action={action} noValidate>
+    <form className="form" onSubmit={onSubmit} noValidate>
       <h1>Proposer une date</h1>
       <p className="intro">
         Un formulaire par soirée. Plus la fiche est complète, moins on a de
@@ -221,8 +233,8 @@ export default function SubmitForm() {
       </label>
       {error('rightsOk')}
 
-      <button className="btn btn-solid submit" type="submit" disabled={pending}>
-        {pending ? 'Envoi…' : 'Envoyer'}
+      <button className="btn btn-solid submit" type="submit">
+        Envoyer
       </button>
     </form>
   );

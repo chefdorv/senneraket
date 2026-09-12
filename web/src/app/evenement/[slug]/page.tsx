@@ -5,7 +5,7 @@ import { longDayLabel, startOfWeek } from '@/lib/dates';
 import { venueLabel } from '@/lib/events';
 import { getEvent, listSlugs } from '@/lib/repository';
 
-export const revalidate = 60;
+export const dynamicParams = false;
 
 type Params = { params: Promise<{ slug: string }> };
 

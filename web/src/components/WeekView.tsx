@@ -10,6 +10,7 @@ import {
 } from '@/lib/dates';
 import { isFree, venueLabel } from '@/lib/events';
 import { groupByDay, listWeek } from '@/lib/repository';
+import { weekBounds } from '@/lib/weeks';
 
 /**
  * La vue semaine : une section par jour, une ligne par événement, au format
@@ -32,6 +33,12 @@ export default async function WeekView({
   const previous = addDays(weekStart, -WEEK_LEN);
   const next = addDays(weekStart, WEEK_LEN);
 
+  // Les semaines hors de la plage générée n'existent pas comme pages : la
+  // flèche s'éteint plutôt que de mener à une 404.
+  const { first, last } = weekBounds();
+  const hasPrevious = previous >= first;
+  const hasNext = next <= last;
+
   return (
     <>
       <section className="wk">
@@ -43,25 +50,37 @@ export default async function WeekView({
         </p>
 
         <nav className="wknav" aria-label="Navigation entre les semaines">
-          <Link
-            href={`/semaine/${previous}`}
-            className="arr"
-            aria-label="Semaine précédente"
-          >
-            &#8592;
-          </Link>
+          {hasPrevious ? (
+            <Link
+              href={`/semaine/${previous}`}
+              className="arr"
+              aria-label="Semaine précédente"
+            >
+              &#8592;
+            </Link>
+          ) : (
+            <span className="arr off" aria-hidden="true">
+              &#8592;
+            </span>
+          )}
           <span className="lbl">
             {days.length === 0
               ? 'Semaine vide'
               : `${days.length} ${days.length > 1 ? 'jours' : 'jour'}`}
           </span>
-          <Link
-            href={`/semaine/${next}`}
-            className="arr"
-            aria-label="Semaine suivante"
-          >
-            &#8594;
-          </Link>
+          {hasNext ? (
+            <Link
+              href={`/semaine/${next}`}
+              className="arr"
+              aria-label="Semaine suivante"
+            >
+              &#8594;
+            </Link>
+          ) : (
+            <span className="arr off" aria-hidden="true">
+              &#8594;
+            </span>
+          )}
         </nav>
       </section>
 

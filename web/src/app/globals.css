@@ -706,6 +706,15 @@ legend {
   line-height: 1.5;
 }
 
+/* Avertissement de démonstration : lisible sans crier, et distinct du
+   message de confirmation qu'il vient nuancer. */
+.sent .warn {
+  color: var(--grey);
+  font-size: 14px;
+  border-left: 2px solid var(--grey-d);
+  padding-left: 12px;
+}
+
 /* ---------- pied de page ---------- */
 
 footer {

@@ -1,31 +1,35 @@
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 
 import WeekView from '@/components/WeekView';
-import { isYmd, rangeLabel, startOfWeek, WEEK_LEN, addDays } from '@/lib/dates';
+import { addDays, isYmd, rangeLabel, startOfWeek, WEEK_LEN } from '@/lib/dates';
 import { referenceToday } from '@/lib/today';
+import { weekStarts } from '@/lib/weeks';
 
-export const revalidate = 60;
+/**
+ * Seuls les lundis de la plage sont générés. Avec un serveur, une URL tombant
+ * un autre jour était redirigée vers le lundi de sa semaine ; en statique il
+ * n'y a personne pour rediriger, donc elle renvoie une 404. À rétablir le
+ * jour où le site tourne sur un serveur d'application.
+ */
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return weekStarts().map((start) => ({ start }));
+}
 
 type Params = { params: Promise<{ start: string }> };
 
 export async function generateMetadata({ params }: Params) {
   const { start } = await params;
   if (!isYmd(start)) return {};
-  const weekStart = startOfWeek(start);
   return {
-    title: `Semaine du ${rangeLabel([weekStart, addDays(weekStart, WEEK_LEN - 1)])}`,
+    title: `Semaine du ${rangeLabel([start, addDays(start, WEEK_LEN - 1)])}`,
   };
 }
 
 export default async function WeekPage({ params }: Params) {
   const { start } = await params;
-  if (!isYmd(start)) notFound();
+  if (!isYmd(start) || startOfWeek(start) !== start) notFound();
 
-  // Une URL qui ne tombe pas un lundi reste valide : on la ramène sur le
-  // lundi de sa semaine plutôt que de renvoyer une 404, pour qu'un lien
-  // recopié à la main continue de marcher.
-  const weekStart = startOfWeek(start);
-  if (weekStart !== start) redirect(`/semaine/${weekStart}`);
-
-  return <WeekView weekStart={weekStart} today={referenceToday()} />;
+  return <WeekView weekStart={start} today={referenceToday()} />;
 }

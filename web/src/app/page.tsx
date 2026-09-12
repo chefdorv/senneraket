@@ -3,12 +3,13 @@ import { startOfWeek } from '@/lib/dates';
 import { referenceToday } from '@/lib/today';
 
 /**
- * La semaine en cours. Rafraîchie toutes les minutes : le site se met à jour
- * en continu, et il doit basculer sur la semaine suivante le lundi matin sans
- * qu'on ait à redéployer.
+ * La semaine en cours.
+ *
+ * En export statique, « en cours » veut dire « au moment du build » : la page
+ * ne rebasculera pas toute seule sur la semaine suivante le lundi matin. Sans
+ * conséquence tant que le site tourne sur des données figées, mais c'est la
+ * première chose à corriger le jour où la base arrive.
  */
-export const revalidate = 60;
-
 export default async function HomePage() {
   const today = referenceToday();
   return <WeekView weekStart={startOfWeek(today)} today={today} />;
