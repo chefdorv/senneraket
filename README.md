@@ -26,9 +26,12 @@ npm run db:migrate   # applique les migrations en attente
 
 ## Site publié
 
-**https://tekarennes.dooka.fr** sert pour l'instant une simple page
-d'attente (`index.html`), via GitHub Pages depuis la racine de `main`.
-L'application n'est pas encore déployée.
+**https://tekarennes.dooka.fr** sert la maquette, sur des données figées
+— aucune base n'existe encore, et le formulaire n'enregistre rien.
+
+Le site est construit en fichiers statiques puis déposé sur GitHub Pages
+par `.github/workflows/pages.yml`, à chaque poussée sur `main` touchant
+`web/`. La branche ne contient que des sources.
 
 ### Ne pas indexer
 
@@ -40,16 +43,18 @@ officiellement ouvert :
 - le `Disallow: /` de `robots.txt`.
 
 Pour ouvrir le site aux moteurs de recherche, il faudra retirer les
-deux, plus le `robots` du `metadata` de `web/src/app/layout.tsx`.
+deux : le `robots` du `metadata` de `web/src/app/layout.tsx`, et le
+`Disallow` de `web/public/robots.txt`.
 
 ### Fichiers de service
 
-- `CNAME` — le domaine personnalisé servi par GitHub Pages. Ne pas le
-  supprimer tant que Pages sert le domaine : Pages le réécrit à chaque
-  changement de domaine dans les réglages du dépôt.
-- `.nojekyll` — désactive Jekyll, qui ignorerait les fichiers et
-  dossiers commençant par un `_`.
-- `404.html` — page d'erreur servie par Pages sur les URL inconnues.
+Ils vivent dans `web/public/`, donc se retrouvent à la racine du site
+publié :
+
+- `CNAME` — le domaine personnalisé. Ne pas le supprimer.
+- `.nojekyll` — empêche tout traitement Jekyll, qui ignorerait le
+  dossier `_next/`.
+- `robots.txt` — le `Disallow: /` ci-dessus.
 
 ## DNS
 

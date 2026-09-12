@@ -40,13 +40,13 @@ payante sans le signaler.
 ```
 docs/brief.md              cadrage, source de vérité
 maquette/site.html         maquette de référence, autonome
-supabase/migrations/       schéma et RLS, numérotés 0001, 0002…
+supabase/                  migrations et runner, rien d'appliqué
 web/                       l'application Next.js
+  public/                  CNAME, robots.txt, .nojekyll
   src/app/                 routes (App Router)
   src/components/          composants
   src/lib/                 dates, modèle, accès aux données
-index.html, CNAME,         page d'attente servie par GitHub Pages,
-.nojekyll, robots.txt      temporaire — voir « Hébergement »
+.github/workflows/         construction et dépôt sur GitHub Pages
 ```
 
 ## Commandes
@@ -96,15 +96,30 @@ Trois choses à savoir avant de toucher au schéma :
 
 ## Hébergement
 
-Situation transitoire, à ne pas prendre pour une cible :
-`tekarennes.dooka.fr` est pour l'instant servi par **GitHub Pages**
-depuis la racine du dépôt (`index.html`), qui n'affiche qu'une page
-d'attente. L'app Next.js vit dans `web/` et n'est pas encore déployée.
+`tekarennes.dooka.fr` sert la maquette, en **fichiers écrits d'avance**
+(`output: 'export'`), déposés sur **GitHub Pages** par le workflow
+`.github/workflows/pages.yml`. La branche `main` ne contient que des
+sources : aucune sortie de build n'y est commitée.
 
-Au premier déploiement Vercel, il faudra : basculer l'enregistrement
-CNAME chez OVH de `chefdorv.github.io.` vers la cible Vercel, désactiver
-GitHub Pages, et supprimer `index.html`, `404.html`, `CNAME` et
-`.nojekyll` de la racine.
+Le réglage Settings > Pages > Source doit rester sur **GitHub Actions**.
+S'il repasse sur « Deploy from a branch », Pages reconstruit la racine du
+dépôt avec Jekyll et sert le README à la place du site — c'est arrivé une
+fois. Changer ce réglage **efface aussi le domaine personnalisé**, à
+remettre juste après.
+
+### Ce que l'export statique coûte
+
+Sans serveur d'application, trois choses sont dégradées. Elles reviennent
+telles quelles en retirant `output` de `next.config.ts` :
+
+- Le formulaire valide côté client et n'envoie rien. L'écran de
+  confirmation le dit explicitement, pour ne pas tromper quelqu'un qui
+  le remplirait pour de bon.
+- La page d'accueil est figée sur la semaine du build : elle ne bascule
+  pas toute seule le lundi matin.
+- La navigation entre semaines est bornée à la plage pré-générée
+  (`src/lib/weeks.ts`), et une URL de semaine qui ne tombe pas un lundi
+  renvoie une 404 au lieu d'être redirigée.
 
 ## Conventions
 
