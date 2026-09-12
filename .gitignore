@@ -1,2 +1,6 @@
 .DS_Store
 node_modules/
+
+# Contient TEKA_DB_URL, donc le mot de passe de la base. Jamais commité.
+.env
+.env.local

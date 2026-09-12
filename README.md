@@ -10,8 +10,19 @@ travail dans [CLAUDE.md](CLAUDE.md).
 
 - `docs/` — le brief de cadrage
 - `maquette/` — la maquette de référence du site public, autonome
-- `supabase/migrations/` — schéma et politiques d'accès
+- `supabase/` — schéma, politiques d'accès, et le script qui les applique
 - `web/` — l'application Next.js
+
+## Base de données
+
+Copier `.env.example` en `.env` et y mettre la connection string du
+projet Supabase, puis :
+
+```
+npm install
+npm run db:status    # où en est la base, sans rien appliquer
+npm run db:migrate   # applique les migrations en attente
+```
 
 ## Site publié
 

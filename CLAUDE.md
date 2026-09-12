@@ -58,6 +58,36 @@ Depuis `web/` :
 - `npx tsc --noEmit` — vérification de types
 - `npx eslint .` — linter
 
+Depuis la racine :
+
+- `npm run db:status` — où en est la base, sans rien appliquer
+- `npm run db:migrate` — applique les migrations en attente
+
+## Base de données
+
+Le projet Supabase est sur le compte qui héberge déjà Quali. **Le
+connecteur Supabase de claude.ai ne l'atteint pas** — il est rattaché à
+l'autre compte, celui de l'organisation Dooka, et répond « You do not
+have permission ». Ne pas perdre de temps à réessayer par là.
+
+Le SQL s'applique donc avec `npm run db:migrate` (`supabase/apply.mjs`,
+seule dépendance `pg`). La machine n'a ni `psql`, ni Homebrew, ni la CLI
+Supabase, ni Docker — c'est la raison du script maison.
+
+La connection string vit dans `.env` à la racine, sous `TEKA_DB_URL`
+(voir `.env.example`). Le fichier est ignoré par git.
+
+Trois choses à savoir avant de toucher au schéma :
+
+- Le fichier appliqué et son enregistrement passent dans **la même
+  transaction**. Une migration ne peut pas être à moitié appliquée.
+- Modifier une migration déjà appliquée est **bloqué** par un contrôle
+  d'empreinte SHA-256, des deux côtés : dans le script et dans
+  `migrations.record()`. La correction se fait par une nouvelle
+  migration, jamais en éditant l'ancienne.
+- `--file <chemin.sql>` exécute un fichier sans l'enregistrer, pour les
+  scripts de vérification qui finissent par un rollback.
+
 ## Hébergement
 
 Situation transitoire, à ne pas prendre pour une cible :

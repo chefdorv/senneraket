@@ -1,0 +1,13 @@
+{
+  "name": "senneraket",
+  "private": true,
+  "description": "Outils de base de données. L'application vit dans web/.",
+  "type": "module",
+  "scripts": {
+    "db:status": "node supabase/apply.mjs --status",
+    "db:migrate": "node supabase/apply.mjs"
+  },
+  "devDependencies": {
+    "pg": "^8.16.3"
+  }
+}
