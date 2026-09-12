@@ -65,7 +65,13 @@ Depuis la racine :
 
 ## Base de données
 
-Le projet Supabase est sur le compte qui héberge déjà Quali. **Le
+**Rien n'existe encore, et c'est volontaire.** Décision du 2026-09-12 :
+le site reste une maquette sur données figées tant qu'il n'y a pas de
+besoin réel. Les migrations sont écrites et prêtes, mais aucune base
+n'est créée. Ne pas en créer une sans feu vert explicite.
+
+Quand le moment viendra, le projet Supabase ira sur le compte qui
+héberge déjà Quali. **Le
 connecteur Supabase de claude.ai ne l'atteint pas** — il est rattaché à
 l'autre compte, celui de l'organisation Dooka, et répond « You do not
 have permission ». Ne pas perdre de temps à réessayer par là.
