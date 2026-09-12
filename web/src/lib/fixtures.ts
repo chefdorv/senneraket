@@ -1,0 +1,291 @@
+/**
+ * Données de démonstration, reprises telles quelles de `maquette/site.html`.
+ *
+ * Le samedi 27 juin vient du post Instagram existant ; les autres jours sont
+ * des exemples inventés pour éprouver les cas limites — un jour isolé en
+ * début de semaine, un événement sans horaire, un sans tarif, un sans aucun
+ * lien. Ce fichier disparaît quand la base Supabase prend le relais ; il est
+ * le seul endroit de l'app où des événements sont écrits en dur.
+ */
+
+import type { PublicEvent, Venue } from './events';
+import { makeSlug } from './events';
+
+const VENUES: Record<string, Venue> = {
+  canal: {
+    name: 'CANAL ST MARTIN',
+    city: 'Rennes',
+    address: null,
+    url: null,
+  },
+  combi: {
+    name: 'COMBI BAR',
+    city: 'Rennes',
+    address: null,
+    url: null,
+  },
+  grabuge: {
+    name: 'GRABUGE',
+    city: 'Rennes',
+    address: null,
+    url: null,
+  },
+  jardin: {
+    name: 'JARDIN MODERNE',
+    city: 'Rennes',
+    address: '11 rue du Manoir de Servigné',
+    url: null,
+  },
+  morex: {
+    name: 'MOREXCUSTOM',
+    city: 'Rennes',
+    address: null,
+    url: null,
+  },
+  penny: {
+    name: 'PENNY LANE',
+    city: 'Rennes',
+    address: null,
+    url: null,
+  },
+  sbx: {
+    name: 'SBX',
+    city: 'Rennes',
+    address: null,
+    url: null,
+  },
+};
+
+type Seed = Omit<PublicEvent, 'slug' | 'venue'> & { venue: keyof typeof VENUES };
+
+const SEEDS: Seed[] = [
+  // ---- mardi 23 juin : une date reçue hors du bloc jeudi-dimanche ----
+  {
+    id: 'z1',
+    date: '2026-06-23',
+    timeLabel: '20H-00H',
+    venue: 'grabuge',
+    venueRaw: null,
+    title: 'Jam session ouverte',
+    genres: 'jazz, funk',
+    price: 'Gratuit',
+    ticketUrl: null,
+    fbUrl: '#',
+    collectiveUrl: null,
+    description:
+      'Scène ouverte aux musiciens, backline sur place. Inscription au bar en début de soirée.',
+    posterUrl: null,
+  },
+
+  // ---- jeudi 25 juin ----
+  {
+    id: 'a1',
+    date: '2026-06-25',
+    timeLabel: '19H-1H',
+    venue: 'combi',
+    venueRaw: null,
+    title: 'Résidents + invité',
+    genres: 'deep house, disco',
+    price: null,
+    ticketUrl: null,
+    fbUrl: '#',
+    collectiveUrl: null,
+    description: null,
+    posterUrl: null,
+  },
+  {
+    id: 'a2',
+    date: '2026-06-25',
+    timeLabel: '20H-00H30',
+    venue: 'jardin',
+    venueRaw: null,
+    title: 'Tremplin scènes locales',
+    genres: 'rock, punk',
+    price: '5 €',
+    ticketUrl: '#',
+    fbUrl: '#',
+    collectiveUrl: null,
+    description:
+      'Quatre groupes rennais en lice, vote du public à la fin de la soirée.',
+    posterUrl: null,
+  },
+
+  // ---- vendredi 26 juin ----
+  {
+    id: 'b1',
+    date: '2026-06-26',
+    timeLabel: '18H-2H',
+    venue: 'morex',
+    venueRaw: null,
+    title: 'Afterwork open air',
+    genres: 'disco, house',
+    price: 'Gratuit',
+    ticketUrl: null,
+    fbUrl: '#',
+    collectiveUrl: null,
+    description: null,
+    posterUrl: null,
+  },
+  {
+    id: 'b2',
+    date: '2026-06-26',
+    timeLabel: '23H-5H',
+    venue: 'penny',
+    venueRaw: null,
+    title: 'Nuit résidents',
+    genres: 'techno',
+    price: '10 €',
+    ticketUrl: '#',
+    fbUrl: null,
+    collectiveUrl: null,
+    description: null,
+    posterUrl: null,
+  },
+  {
+    id: 'b3',
+    date: '2026-06-26',
+    timeLabel: '21H-2H',
+    venue: 'sbx',
+    venueRaw: null,
+    title: 'Carte blanche collectif',
+    genres: 'breakbeat, electro',
+    price: null,
+    ticketUrl: null,
+    fbUrl: '#',
+    collectiveUrl: null,
+    description: null,
+    posterUrl: null,
+  },
+
+  // ---- samedi 27 juin : repris du post ----
+  {
+    id: 'c1',
+    date: '2026-06-27',
+    timeLabel: '16H-22H',
+    venue: 'canal',
+    venueRaw: null,
+    title: 'Open air Glou-Glou dans la raquette',
+    genres: 'house',
+    price: null,
+    ticketUrl: null,
+    fbUrl: null,
+    collectiveUrl: null,
+    description: null,
+    posterUrl: null,
+  },
+  {
+    id: 'c2',
+    date: '2026-06-27',
+    timeLabel: '18H-1H',
+    venue: 'morex',
+    venueRaw: null,
+    title: 'BVCCHUS & FRIENDS // OPEN AIR // ENJOY REMEDY',
+    genres: 'tech house, indie dance',
+    price: 'Gratuit',
+    ticketUrl: null,
+    fbUrl: null,
+    collectiveUrl: null,
+    description: null,
+    posterUrl: null,
+  },
+  {
+    id: 'c3',
+    date: '2026-06-27',
+    timeLabel: '21H-00H30',
+    venue: 'combi',
+    venueRaw: null,
+    title: 'AGATHA / RIXXI K9',
+    genres: 'electro to bass music',
+    price: null,
+    ticketUrl: null,
+    fbUrl: null,
+    collectiveUrl: null,
+    description: null,
+    posterUrl: null,
+  },
+  {
+    id: 'c4',
+    date: '2026-06-27',
+    timeLabel: '19H-1H',
+    venue: 'grabuge',
+    venueRaw: null,
+    title: 'Concert + dj set : vibes tailors',
+    genres: 'hip-hop, afro, funk',
+    price: null,
+    ticketUrl: null,
+    fbUrl: null,
+    collectiveUrl: null,
+    description: null,
+    posterUrl: null,
+  },
+  {
+    // Sans horaire : le cas que la recette impose de garder lisible.
+    id: 'c5',
+    date: '2026-06-27',
+    timeLabel: null,
+    venue: 'jardin',
+    venueRaw: null,
+    title: 'SUPERBOWL OF HARDCORE FESTIVAL 2026',
+    genres: 'hardcore, punk, metal',
+    price: null,
+    ticketUrl: null,
+    fbUrl: null,
+    collectiveUrl: null,
+    description: null,
+    posterUrl: null,
+  },
+  {
+    id: 'c6',
+    date: '2026-06-27',
+    timeLabel: '22H-3H',
+    venue: 'penny',
+    venueRaw: null,
+    title: 'PERCEPT',
+    genres: 'techno, bounce, trance',
+    price: null,
+    ticketUrl: null,
+    fbUrl: null,
+    collectiveUrl: null,
+    description: null,
+    posterUrl: null,
+  },
+  {
+    id: 'c7',
+    date: '2026-06-27',
+    timeLabel: '21H-00H30',
+    venue: 'sbx',
+    venueRaw: null,
+    title: 'Saga Raga & LDE',
+    genres: 'hard techno, indus',
+    price: null,
+    ticketUrl: null,
+    fbUrl: null,
+    collectiveUrl: null,
+    description: null,
+    posterUrl: null,
+  },
+
+  // ---- dimanche 28 juin ----
+  {
+    id: 'd1',
+    date: '2026-06-28',
+    timeLabel: '14H-20H',
+    venue: 'canal',
+    venueRaw: null,
+    title: 'Open air de clôture',
+    genres: 'house, disco',
+    price: 'Gratuit',
+    ticketUrl: null,
+    fbUrl: '#',
+    collectiveUrl: null,
+    description:
+      'Dernier rendez-vous en extérieur avant la trêve estivale, sur la même portion du canal.',
+    posterUrl: null,
+  },
+];
+
+export const FIXTURE_EVENTS: PublicEvent[] = SEEDS.map((seed) => ({
+  ...seed,
+  venue: VENUES[seed.venue],
+  slug: makeSlug(seed.title, seed.date),
+}));

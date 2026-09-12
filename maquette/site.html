@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Tek à Rennes — l'agenda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700;800&family=Archivo:wght@400;500;600;700&display=swap">
+<style>
+  :root{
+    --black:#000;
+    --panel:#0c0c0c;
+    --panel-2:#151512;
+    --yellow:#ebf54f;
+    --yellow-d:#c9d340;
+    --white:#fff;
+    --grey:#9b9b95;
+    --grey-d:#6a6a66;
+    --display:"Unbounded","Arial Black",system-ui,sans-serif;
+    --body:"Archivo","Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{background:var(--black)}
+  body{
+    background:var(--black);color:var(--white);
+    font-family:var(--body);font-size:16px;line-height:1.45;margin:0;
+    -webkit-font-smoothing:antialiased;
+  }
+  button{font:inherit;color:inherit;cursor:pointer;background:none;border:none;padding:0}
+  a{color:var(--yellow);text-underline-offset:3px}
+  :focus-visible{outline:2px solid var(--yellow);outline-offset:3px}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+  .shell{max-width:820px;margin:0 auto;padding-inline:18px;padding-block:0 80px}
+
+  .mock{
+    background:var(--yellow);color:var(--black);
+    font-family:var(--body);font-weight:700;font-size:11px;letter-spacing:.06em;
+    text-transform:uppercase;text-align:center;padding:7px 18px;line-height:1.35;
+  }
+
+  /* ---------- masthead ---------- */
+  .bar{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-block:18px 16px;flex-wrap:wrap}
+  .wordmark{font-family:var(--display);font-weight:700;font-size:15px;letter-spacing:.02em;color:var(--yellow);text-transform:uppercase}
+  .barnav{display:flex;gap:8px}
+  .btn{
+    font-family:var(--body);font-weight:700;font-size:12px;letter-spacing:.05em;text-transform:uppercase;
+    border:2px solid var(--yellow);color:var(--yellow);background:transparent;
+    padding:8px 14px;border-radius:999px;transition:background .12s,color .12s;display:inline-block;text-decoration:none;
+  }
+  .btn:hover{background:var(--yellow);color:var(--black)}
+  .btn-solid{background:var(--yellow);color:var(--black)}
+  .btn-solid:hover{background:var(--white);border-color:var(--white);color:var(--black)}
+
+  /* ---------- week header ---------- */
+  .wk{text-align:center;padding-block:22px 6px}
+  .wk h1{
+    font-family:var(--display);font-weight:800;
+    font-size:clamp(26px,7.4vw,52px);line-height:1;letter-spacing:.01em;
+    color:var(--yellow);text-transform:uppercase;margin:0;
+  }
+  .wk .range{
+    font-family:var(--display);font-weight:600;
+    font-size:clamp(15px,3.6vw,25px);color:var(--yellow);margin:10px 0 0;letter-spacing:.01em;
+  }
+  .wknav{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:14px}
+  .arr{
+    width:34px;height:34px;border:2px solid var(--yellow);border-radius:999px;color:var(--yellow);
+    display:grid;place-items:center;font-size:15px;line-height:1;transition:background .12s,color .12s;
+  }
+  .arr:hover:not(:disabled){background:var(--yellow);color:var(--black)}
+  .arr:disabled{opacity:.28;cursor:not-allowed}
+  .wknav .lbl{font-family:var(--body);font-weight:700;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey)}
+
+  /* ---------- day pills ---------- */
+  .pills{display:flex;flex-wrap:wrap;gap:8px;margin:26px 0 8px}
+  .pill{
+    font-family:var(--body);font-weight:700;font-size:15px;
+    border:2px solid var(--yellow);border-radius:999px;padding:7px 17px;color:var(--yellow);
+    transition:background .12s,color .12s;white-space:nowrap;
+  }
+  .pill:hover{background:var(--yellow);color:var(--black)}
+  .pill.on{background:var(--yellow);color:var(--black)}
+  .pill.nil{border-color:var(--grey-d);color:var(--grey-d)}
+  .pill.nil:hover{background:transparent;color:var(--grey)}
+  .pill .tn{font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-left:7px;opacity:.75}
+
+  /* ---------- day block ---------- */
+  .day{margin-top:30px}
+  .day-h{display:flex;align-items:center;gap:12px;margin-bottom:4px}
+  .day-h .p{
+    background:var(--yellow);color:var(--black);font-family:var(--body);font-weight:700;
+    font-size:clamp(15px,3.4vw,19px);padding:7px 18px;border-radius:999px;
+  }
+  .day-h .n{font-family:var(--body);font-weight:700;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--grey);margin-left:auto}
+
+  .rows{border-top:2px solid var(--yellow);margin-top:12px}
+  .row{
+    display:grid;grid-template-columns:180px 112px 1fr;gap:18px;align-items:center;
+    width:100%;text-align:left;padding:15px 6px;border-bottom:2px solid var(--yellow);
+    transition:background .12s;
+  }
+  .row:hover{background:var(--panel-2)}
+  .row:hover .venue{color:var(--yellow)}
+  .venue{font-family:var(--body);font-weight:700;font-size:17px;letter-spacing:-.01em;text-transform:uppercase;line-height:1.15;transition:color .12s}
+  .time{font-family:var(--body);font-weight:700;font-size:15px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+  .time.nil{color:var(--grey-d);font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+  .what{font-family:var(--body);font-weight:700;font-size:16px;line-height:1.3}
+  .what .g{font-weight:400;color:var(--grey)}
+  .what .free{color:var(--yellow)}
+
+  .nothing{border:2px dashed var(--grey-d);padding:40px 22px;text-align:center;margin-top:14px}
+  .nothing .b{font-family:var(--display);font-weight:700;font-size:clamp(17px,4vw,24px);color:var(--yellow);text-transform:uppercase;margin:0 0 8px}
+  .nothing p{color:var(--grey);margin:0 0 16px}
+
+  /* ---------- detail ---------- */
+  .back{font-family:var(--body);font-weight:700;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);margin-block:20px 22px}
+  .back:hover{color:var(--yellow)}
+  .det-when{font-family:var(--body);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--yellow);margin:0 0 12px}
+  .det h2{
+    font-family:var(--display);font-weight:800;font-size:clamp(25px,6.6vw,48px);line-height:1.02;
+    letter-spacing:.005em;text-transform:uppercase;margin:0 0 10px;text-wrap:balance;
+  }
+  .det .gen{font-family:var(--body);font-weight:400;font-size:17px;color:var(--grey);margin:0 0 24px}
+  .det .desc{font-size:16.5px;line-height:1.55;max-width:58ch;margin:0 0 24px}
+  .det .desc.none{color:var(--grey-d);font-style:italic}
+  .facts{border-top:2px solid var(--yellow);margin:0 0 26px}
+  .fact{display:grid;grid-template-columns:130px 1fr;gap:16px;padding-block:12px;border-bottom:2px solid var(--yellow)}
+  .fact dt{font-family:var(--body);font-weight:700;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);padding-top:3px}
+  .fact dd{margin:0;font-size:16px;font-weight:600}
+  .fact dd .m{display:block;font-weight:400;color:var(--grey);font-size:14px;margin-top:2px}
+  .fact dd.miss{color:var(--grey-d);font-weight:400;font-style:italic}
+  .links{display:flex;flex-wrap:wrap;gap:9px}
+
+  /* ---------- form ---------- */
+  .form{max-width:560px}
+  .form h2{font-family:var(--display);font-weight:800;font-size:clamp(24px,6vw,40px);line-height:1.05;letter-spacing:.005em;text-transform:uppercase;color:var(--yellow);margin:0 0 12px}
+  .form .intro{color:var(--grey);margin:0 0 22px;max-width:52ch;font-size:15.5px}
+  .dl{border:2px solid var(--yellow);padding:13px 16px;margin-bottom:26px;font-size:15px;line-height:1.45}
+  .dl b{color:var(--yellow)}
+  fieldset{border:none;border-top:2px solid var(--yellow);margin:0 0 26px;padding:15px 0 0}
+  legend{font-family:var(--body);font-weight:700;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--yellow);padding:0}
+  .row2{display:grid;gap:15px;margin-bottom:15px}
+  .row2.two{grid-template-columns:1fr 1fr}
+  .f label{display:block;font-family:var(--body);font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
+  .f label .rq{color:var(--yellow)}
+  .f input,.f select,.f textarea{
+    width:100%;font-family:var(--body);font-size:15.5px;font-weight:500;
+    background:var(--panel);color:var(--white);border:2px solid #2c2c28;padding:10px 12px;border-radius:0;
+  }
+  .f input:focus,.f select:focus,.f textarea:focus{border-color:var(--yellow);outline:none}
+  .f input::placeholder,.f textarea::placeholder{color:var(--grey-d)}
+  .f textarea{resize:vertical;min-height:84px}
+  .f .hint{font-size:12.5px;color:var(--grey);margin-top:5px;line-height:1.4}
+  .f input[type=file]{padding:8px;font-size:13px}
+  .chk{display:flex;gap:11px;align-items:flex-start;font-size:14.5px;line-height:1.45;margin-bottom:22px;color:var(--grey)}
+  .chk input{margin-top:3px;accent-color:var(--yellow);width:17px;height:17px;flex:none}
+  .sent{border:2px solid var(--yellow);padding:28px 24px}
+  .sent h3{font-family:var(--display);font-weight:700;font-size:21px;text-transform:uppercase;color:var(--yellow);margin:0 0 12px;line-height:1.2}
+  .sent p{margin:0 0 12px;font-size:15.5px;line-height:1.5}
+
+  footer{margin-top:60px;padding-top:22px;border-top:2px solid var(--yellow);text-align:center}
+  footer .mk{font-family:var(--display);font-weight:700;font-size:clamp(16px,4.4vw,26px);letter-spacing:.02em;color:var(--yellow);text-transform:uppercase}
+  footer .fl{display:flex;flex-wrap:wrap;gap:6px 20px;justify-content:center;margin-top:14px;font-size:12.5px;color:var(--grey)}
+
+  @media (max-width:660px){
+    .row{grid-template-columns:1fr;gap:5px;padding-block:14px}
+    .time{font-size:13px;color:var(--yellow)}
+    .fact{grid-template-columns:1fr;gap:3px}
+    .row2.two{grid-template-columns:1fr}
+    .bar{padding-block:14px 12px}
+  }
+</style>
+</head>
+<body>
+
+<div class="mock">Maquette &middot; samedi 27 juin repris du post existant &middot; les autres jours sont des exemples</div>
+
+<div class="shell">
+  <div class="bar">
+    <span class="wordmark">Tek a Rennes</span>
+    <nav class="barnav">
+      <button class="btn" id="nav-week">La semaine</button>
+      <button class="btn btn-solid" id="nav-submit">Proposer</button>
+    </nav>
+  </div>
+
+  <main id="view"></main>
+
+  <footer>
+    <div class="mk">Tek a Rennes</div>
+    <div class="fl">
+      <span>Publication le mercredi</span>
+      <span>Le site est mis à jour en continu</span>
+      <span>Mentions légales</span>
+      <span>Instagram</span>
+    </div>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* Date de référence figée sur la semaine du post repris. */
+  var TODAY = "2026-06-27";
+
+  /* Semaine pleine lundi -> dimanche : les jours sans date validée ne s'affichent pas. */
+  var WEEK_START = 1; /* lundi */
+  var WEEK_LEN = 7;
+
+  var E = [
+    /* ---- mardi 23 juin (exemple : une date reçue hors du bloc jeudi-dimanche) ---- */
+    {id:"z1",date:"2026-06-23",time:"20H-00H",venue:"GRABUGE",
+     what:"Jam session ouverte",genres:"jazz, funk",price:"Gratuit",
+     desc:"Scène ouverte aux musiciens, backline sur place. Inscription au bar en début de soirée.", ticket:null, fb:"#"},
+
+    /* ---- jeudi 25 juin (exemples) ---- */
+    {id:"a1",date:"2026-06-25",time:"19H-1H",venue:"COMBI BAR",
+     what:"Résidents + invité",genres:"deep house, disco",price:null,
+     desc:"", ticket:null, fb:"#"},
+    {id:"a2",date:"2026-06-25",time:"20H-00H30",venue:"JARDIN MODERNE",
+     what:"Tremplin scènes locales",genres:"rock, punk",price:"5 €",
+     desc:"Quatre groupes rennais en lice, vote du public à la fin de la soirée.", ticket:"#", fb:"#"},
+
+    /* ---- vendredi 26 juin (exemples) ---- */
+    {id:"b1",date:"2026-06-26",time:"18H-2H",venue:"MOREXCUSTOM",
+     what:"Afterwork open air",genres:"disco, house",price:"Gratuit",
+     desc:"", ticket:null, fb:"#"},
+    {id:"b2",date:"2026-06-26",time:"23H-5H",venue:"PENNY LANE",
+     what:"Nuit résidents",genres:"techno",price:"10 €",
+     desc:"", ticket:"#", fb:null},
+    {id:"b3",date:"2026-06-26",time:"21H-2H",venue:"SBX",
+     what:"Carte blanche collectif",genres:"breakbeat, electro",price:null,
+     desc:"", ticket:null, fb:"#"},
+
+    /* ---- samedi 27 juin (repris du post) ---- */
+    {id:"c1",date:"2026-06-27",time:"16H-22H",venue:"CANAL ST MARTIN",
+     what:"Open air Glou-Glou dans la raquette",genres:"house",price:null,
+     desc:"", ticket:null, fb:null},
+    {id:"c2",date:"2026-06-27",time:"18H-1H",venue:"MOREXCUSTOM",
+     what:"BVCCHUS & FRIENDS // OPEN AIR // ENJOY REMEDY",genres:"tech house, indie dance",price:"Gratuit",
+     desc:"", ticket:null, fb:null},
+    {id:"c3",date:"2026-06-27",time:"21H-00H30",venue:"COMBI BAR",
+     what:"AGATHA / RIXXI K9",genres:"electro to bass music",price:null,
+     desc:"", ticket:null, fb:null},
+    {id:"c4",date:"2026-06-27",time:"19H-1H",venue:"GRABUGE",
+     what:"Concert + dj set : vibes tailors",genres:"hip-hop, afro, funk",price:null,
+     desc:"", ticket:null, fb:null},
+    {id:"c5",date:"2026-06-27",time:null,venue:"JARDIN MODERNE",
+     what:"SUPERBOWL OF HARDCORE FESTIVAL 2026",genres:"hardcore, punk, metal",price:null,
+     desc:"", ticket:null, fb:null},
+    {id:"c6",date:"2026-06-27",time:"22H-3H",venue:"PENNY LANE",
+     what:"PERCEPT",genres:"techno, bounce, trance",price:null,
+     desc:"", ticket:null, fb:null},
+    {id:"c7",date:"2026-06-27",time:"21H-00H30",venue:"SBX",
+     what:"Saga Raga & LDE",genres:"hard techno, indus",price:null,
+     desc:"", ticket:null, fb:null},
+
+    /* ---- dimanche 28 juin (exemple) ---- */
+    {id:"d1",date:"2026-06-28",time:"14H-20H",venue:"CANAL ST MARTIN",
+     what:"Open air de clôture",genres:"house, disco",price:"Gratuit",
+     desc:"Dernier rendez-vous en extérieur avant la trêve estivale, sur la même portion du canal.", ticket:null, fb:"#"}
+  ];
+
+  var DAYS=["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"];
+  var MON=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+
+  function ymd(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+  function parse(s){var p=s.split("-");return new Date(+p[0],+p[1]-1,+p[2]);}
+  function add(d,n){var x=new Date(d.getTime());x.setDate(x.getDate()+n);return x;}
+  function startOf(d){var x=new Date(d.getTime());var off=(x.getDay()-WEEK_START+7)%7;x.setDate(x.getDate()-off);return x;}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function free(p){return p && /gratuit|libre/i.test(p);}
+
+  var off=0, view="week", cur=null, sent=false;
+  var root=document.getElementById("view");
+
+  function ofWeek(s){
+    var a=ymd(s), b=ymd(add(s,WEEK_LEN-1));
+    return E.filter(function(e){return e.date>=a && e.date<=b;});
+  }
+
+  function renderWeek(){
+    var s=add(startOf(parse(TODAY)), off*7), last=add(s,WEEK_LEN-1);
+    var list=ofWeek(s);
+    var rel = off===0?"Cette semaine":(off===1?"Semaine prochaine":(off===-1?"Semaine dernière":"Semaine du"));
+
+    /* Les jours vides ne comptent pas : la plage affichée est celle des dates réelles. */
+    var filled=[];
+    for(var i=0;i<WEEK_LEN;i++){
+      var d=add(s,i), k=ymd(d);
+      if(list.some(function(e){return e.date===k;})) filled.push({d:d,k:k});
+    }
+    var range = filled.length
+      ? (filled[0].d.getDate()
+         + (filled[0].d.getMonth()===filled[filled.length-1].d.getMonth() ? "" : " "+MON[filled[0].d.getMonth()])
+         + " > " + filled[filled.length-1].d.getDate()
+         + " " + MON[filled[filled.length-1].d.getMonth()]
+         + " " + filled[filled.length-1].d.getFullYear())
+      : (s.getDate()+" > "+last.getDate()+" "+MON[last.getMonth()]+" "+last.getFullYear());
+
+    var h='<section class="wk"><h1>'+esc(rel)+'</h1><p class="range">'+esc(range)+'</p>'+
+      '<div class="wknav">'+
+        '<button class="arr" id="prev" aria-label="Semaine précédente"'+(off<=-1?" disabled":"")+'>&#8592;</button>'+
+        '<span class="lbl">'+(filled.length?filled.length+(filled.length>1?" jours":" jour"):"Semaine vide")+'</span>'+
+        '<button class="arr" id="next" aria-label="Semaine suivante"'+(off>=2?" disabled":"")+'>&#8594;</button>'+
+      '</div></section>';
+
+    if(filled.length>1){
+      h+='<div class="pills">';
+      filled.forEach(function(x){
+        h+='<button class="pill'+(x.k===TODAY?" on":"")+'" data-go="'+x.k+'">'+
+           DAYS[x.d.getDay()]+" "+x.d.getDate()+" "+MON[x.d.getMonth()]+
+           (x.k===TODAY?'<span class="tn">ce soir</span>':'')+'</button>';
+      });
+      h+='</div>';
+    }
+
+    if(!list.length){
+      h+='<div class="nothing"><p class="b">Rien de programmé</p>'+
+         '<p>Aucun événement validé sur cette période pour le moment.</p>'+
+         '<button class="btn btn-solid" id="e-sub">Proposer un événement</button></div>';
+      root.innerHTML=h; wire(); return;
+    }
+
+    for(var j=0;j<WEEK_LEN;j++){
+      var dd=add(s,j), kk=ymd(dd);
+      var evs=list.filter(function(e){return e.date===kk;});
+      if(!evs.length) continue;
+      h+='<section class="day" id="d-'+kk+'"><div class="day-h">'+
+         '<span class="p">'+DAYS[dd.getDay()]+" "+dd.getDate()+" "+MON[dd.getMonth()]+'</span>'+
+         '<span class="n">'+evs.length+(evs.length>1?" dates":" date")+'</span></div><div class="rows">';
+      evs.forEach(function(e){
+        h+='<button class="row" data-id="'+e.id+'">'+
+           '<span class="venue">'+esc(e.venue)+'</span>'+
+           (e.time?'<span class="time">'+esc(e.time)+'</span>'
+                  :'<span class="time nil">horaire à venir</span>')+
+           '<span class="what">'+esc(e.what)+
+             (free(e.price)?' <span class="free">// GRATUIT</span>':'')+
+             ' <span class="g">('+esc(e.genres)+')</span></span>'+
+           '</button>';
+      });
+      h+='</div></section>';
+    }
+    root.innerHTML=h; wire();
+  }
+
+  function renderDetail(){
+    var e=E.filter(function(x){return x.id===cur;})[0];
+    if(!e){view="week";return renderWeek();}
+    var d=parse(e.date);
+    var when=DAYS[d.getDay()]+" "+d.getDate()+" "+MON[d.getMonth()]+" "+d.getFullYear();
+
+    var links="";
+    if(e.ticket) links+='<a class="btn btn-solid" href="'+e.ticket+'">Billetterie</a>';
+    if(e.fb) links+='<a class="btn" href="'+e.fb+'">Événement Facebook</a>';
+    if(!links) links='<span style="color:var(--grey-d);font-size:14px;font-style:italic">Aucun lien transmis par l\'organisateur</span>';
+
+    var h='<button class="back" id="back">&#8592; Retour à la semaine</button><div class="det">'+
+      '<p class="det-when">'+esc(when)+(e.time?" &middot; "+esc(e.time):"")+'</p>'+
+      '<h2>'+esc(e.what)+'</h2>'+
+      '<p class="gen">'+esc(e.genres)+'</p>'+
+      (e.desc?'<p class="desc">'+esc(e.desc)+'</p>'
+             :'<p class="desc none">Aucune description fournie par l\'organisateur.</p>')+
+      '<dl class="facts">'+
+        '<div class="fact"><dt>Lieu</dt><dd>'+esc(e.venue)+'<span class="m">Rennes</span></dd></div>'+
+        '<div class="fact"><dt>Horaires</dt>'+(e.time?'<dd>'+esc(e.time)+'</dd>':'<dd class="miss">Non communiqués</dd>')+'</div>'+
+        '<div class="fact"><dt>Tarif</dt>'+(e.price?'<dd>'+esc(e.price)+'</dd>':'<dd class="miss">Non communiqué</dd>')+'</div>'+
+        '<div class="fact"><dt>Genres</dt><dd>'+esc(e.genres)+'</dd></div>'+
+      '</dl>'+
+      '<div class="links">'+links+'</div>'+
+      '</div>';
+    root.innerHTML=h; wire();
+  }
+
+  function renderSubmit(){
+    if(sent){
+      root.innerHTML='<button class="back" id="back">&#8592; Retour à la semaine</button>'+
+        '<div class="form"><div class="sent"><h3>Proposition reçue</h3>'+
+        '<p>Elle part en relecture. L\'équipe traite les envois le mardi soir, et vous aurez une réponse dans tous les cas — y compris si la soirée ne rentre pas dans la ligne de l\'agenda.</p>'+
+        '<p>S\'il manque une info, on vous écrit avant la clôture.</p>'+
+        '<p style="margin-top:18px"><button class="btn" id="again">Proposer une autre date</button></p>'+
+        '</div></div>';
+      wire();return;
+    }
+    root.innerHTML=
+      '<button class="back" id="back">&#8592; Retour à la semaine</button>'+
+      '<form class="form" id="frm"><h2>Proposer une date</h2>'+
+      '<p class="intro">Un formulaire par soirée. Plus la fiche est complète, moins on a de questions à vous poser.</p>'+
+      '<div class="dl">Pour figurer sur le <b>post Instagram</b> de la semaine, envoyez avant le <b>mardi 20 h</b> — la publication part le mercredi. Passé ce délai, la date peut quand même être ajoutée <b>sur le site</b>, tant qu\'elle n\'a pas eu lieu.</div>'+
+
+      '<fieldset><legend>L\'essentiel</legend>'+
+        '<div class="row2 f"><label for="q1">Lieu <span class="rq">*</span></label>'+
+          '<input id="q1" required placeholder="Penny Lane, SBX, Jardin Moderne…">'+
+          '<p class="hint">Les lieux déjà connus remplissent l\'adresse tout seuls.</p></div>'+
+        '<div class="row2 two">'+
+          '<div class="f"><label for="q2">Date <span class="rq">*</span></label><input id="q2" type="date" required></div>'+
+          '<div class="f"><label for="q3">Horaires <span class="rq">*</span></label><input id="q3" required placeholder="22H-3H"></div>'+
+        '</div>'+
+        '<div class="row2 f"><label for="q4">Artistes / intitulé <span class="rq">*</span></label>'+
+          '<input id="q4" required placeholder="AGATHA / RIXXI K9"></div>'+
+        '<div class="row2 f"><label for="q5">Genres <span class="rq">*</span></label>'+
+          '<input id="q5" required placeholder="hard techno, indus">'+
+          '<p class="hint">Repris tels quels entre parenthèses, comme sur le post.</p></div>'+
+      '</fieldset>'+
+
+      '<fieldset><legend>Ce qui manque presque toujours</legend>'+
+        '<div class="row2 f"><label for="q6">Tarif</label><input id="q6" placeholder="10 €, prix libre, gratuit…">'+
+          '<p class="hint">Une entrée gratuite est mise en avant dans la liste.</p></div>'+
+        '<div class="row2 f"><label for="q7">Lien billetterie</label><input id="q7" type="url" placeholder="https://"></div>'+
+        '<div class="row2 f"><label for="q8">Lien de l\'événement Facebook</label><input id="q8" type="url" placeholder="https://"></div>'+
+        '<div class="row2 f"><label for="q9">Deux ou trois lignes de présentation</label>'+
+          '<textarea id="q9" placeholder="La configuration, les invités, une info pratique…"></textarea></div>'+
+        '<div class="row2 f"><label for="q10">Affiche</label><input id="q10" type="file" accept="image/*">'+
+          '<p class="hint">Un partage de post en DM ne transmet pas l\'image — envoyez le fichier.</p></div>'+
+      '</fieldset>'+
+
+      '<fieldset><legend>Pour vous joindre</legend>'+
+        '<div class="row2 two">'+
+          '<div class="f"><label for="q11">Nom ou collectif <span class="rq">*</span></label><input id="q11" required></div>'+
+          '<div class="f"><label for="q12">E-mail <span class="rq">*</span></label><input id="q12" type="email" required></div>'+
+        '</div>'+
+        '<p class="hint" style="color:var(--grey);font-size:12.5px">Sert uniquement à revenir vers vous. Jamais publié.</p>'+
+      '</fieldset>'+
+
+      '<label class="chk"><input type="checkbox" id="q13" required>'+
+        '<span>J\'autorise la diffusion de l\'affiche et des infos envoyées sur l\'agenda et ses réseaux, et je confirme en détenir les droits.</span></label>'+
+      '<button class="btn btn-solid" type="submit" style="padding:12px 24px;font-size:13px">Envoyer</button>'+
+      '</form>';
+    wire();
+  }
+
+  function render(){
+    if(view==="week") renderWeek();
+    else if(view==="event") renderDetail();
+    else renderSubmit();
+    window.scrollTo(0,0);
+  }
+
+  function wire(){
+    var p=document.getElementById("prev"),n=document.getElementById("next");
+    if(p)p.onclick=function(){off--;render();};
+    if(n)n.onclick=function(){off++;render();};
+
+    Array.prototype.forEach.call(document.querySelectorAll(".row"),function(r){
+      r.onclick=function(){cur=r.getAttribute("data-id");view="event";render();};
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".pill"),function(b){
+      b.onclick=function(){
+        var t=document.getElementById("d-"+b.getAttribute("data-go"));
+        if(t)t.scrollIntoView({behavior:"smooth",block:"start"});
+      };
+    });
+
+    var bk=document.getElementById("back");
+    if(bk)bk.onclick=function(){view="week";render();};
+    var es=document.getElementById("e-sub");
+    if(es)es.onclick=function(){sent=false;view="submit";render();};
+    var ag=document.getElementById("again");
+    if(ag)ag.onclick=function(){sent=false;render();};
+    var f=document.getElementById("frm");
+    if(f)f.onsubmit=function(ev){ev.preventDefault();sent=true;render();};
+  }
+
+  document.getElementById("nav-week").onclick=function(){view="week";off=0;render();};
+  document.getElementById("nav-submit").onclick=function(){sent=false;view="submit";render();};
+
+  render();
+})();
+</script>
+</body>
+</html>
